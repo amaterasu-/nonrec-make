@@ -36,12 +36,12 @@ else
 endif
 ifeq ($(COLOR_TTY),true)
 echo_prog := $(shell if echo -e | grep -q -- -e; then echo echo; else echo echo -e; fi)
-echo_cmd = @$(echo_prog) "$(COLOR)$(call strip_top,$(1))$(NOCOLOR)";
+echo_cmd = @$(echo_prog) "$(COLOR)[$(BUILD_MODE)] $(call strip_top,$(1))$(NOCOLOR)";
 else
-echo_cmd = @echo "$(call strip_top,$(1))";
+echo_cmd = @echo "[$(BUILD_MODE)] $(call strip_top,$(1))";
 endif
 else # Verbose output
-echo_cmd =
+echo_cmd = : [$(BUILD_MODE)] ;
 endif
 
 COMPILE.c = $(call echo_cmd,CC $<) $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
