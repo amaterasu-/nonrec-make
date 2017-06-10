@@ -15,7 +15,7 @@
 # directory level.  So if you set it to say AUTOTEST then each each
 # directory will have it's own AUTOTEST_$(dir) variable with value taken
 # from appropriate Rules.mk
-VERB_VARS :=
+VERB_VARS := MAKEFILE_DEPS
 
 # OBJ_VARS - like VERB_VARS but all values taken from Rules.mk have
 # $(OBJPATH) prepended so instead of saying:
@@ -246,7 +246,7 @@ $(2)_CMD =
 endef
 
 define tgt_rule
-abs_deps := $$(foreach dep,$$(DEPS_$(1)),$$(if $$(or $$(filter /%,$$(dep)),$$(filter $$$$%,$$(dep))),$$(dep),$$(addprefix $(OBJPATH)/,$$(dep))))
+abs_deps := $$(foreach dep,$$(DEPS_$(1)),$$(if $$(or $$(filter /%,$$(dep)),$$(filter $$$$%,$$(dep))),$$(dep),$$(addprefix $(OBJPATH)/,$$(dep)))) $$(MAKEFILE_DEPS_$$(d)) $$(NONREC_MAKEFILES)
 -include $$(addsuffix .d,$$(basename $$(abs_deps)))
 $(1): $$(abs_deps) $(if $(findstring $(OBJDIR),$(1)),| $(OBJPATH),)
 	$$(or $$(CMD_$(1)),$$(MAKECMD$$(suffix $$@)),$$(DEFAULT_MAKECMD))
@@ -272,3 +272,6 @@ endif
 
 # Suck in the default rules
 include $(MK)/def_rules.mk
+
+# Save the current list of imported makefiles
+NONREC_MAKEFILES := $(MAKEFILE_LIST)

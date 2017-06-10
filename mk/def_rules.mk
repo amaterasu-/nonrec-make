@@ -117,5 +117,5 @@ endef
 # know what you are doing :D).  It should be enough for you to add new
 # mappings to AUTO_RULES and AUTO_TD_RULES above and define/change
 # corresponding COMPILE.suffix and COMPILE.outsuffix.insuffix variables.
-$(eval define skeleton$(foreach rule,$(AUTO_RULES),${\n}$$(OBJPATH)/%$(subst :,: $$(1)/%,$(rule)) | $$(OBJPATH); $$(value COMPILECMD))${\n}\
-                      $(foreach rule,$(AUTO_TD_RULES),${\n}$$(OBJPATH)/%$(subst :,: $$(1)/%,$(subst &, $$(OBJPATH)/%,$(rule))) | $$(OBJPATH); $$(value COMPILECMD_TD))${\n}endef)
+$(eval define skeleton$(foreach rule,$(AUTO_RULES),${\n}$$(OBJPATH)/%$(subst :,: $$(1)/%,$(rule)) $$(MAKEFILE_DEPS_$$(d)) $$(NONREC_MAKEFILES) | $$(OBJPATH); $$(value COMPILECMD))${\n}\
+                      $(foreach rule,$(AUTO_TD_RULES),${\n}$$(OBJPATH)/%$(subst :,: $$(1)/%,$(subst &, $$(OBJPATH)/%,$(rule))) $$(MAKEFILE_DEPS_$$(d)) $$(NONREC_MAKEFILES) | $$(OBJPATH); $$(value COMPILECMD_TD))${\n}endef)
