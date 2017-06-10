@@ -25,7 +25,7 @@ COLOR := \033[33;40m
 NOCOLOR := \033[0m
 
 ifndef COLOR_TTY
-COLOR_TTY := $(shell [ `tput colors` -gt 2 ] && echo true)
+COLOR_TTY := $(shell [ "`tput colors 2> /dev/null`" -gt 2 ] 2> /dev/null && echo true)
 endif
 
 ifneq ($(VERBOSE),true)
