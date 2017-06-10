@@ -6,4 +6,4 @@ TARGETS := $(d)/external_app
 # dependencies.  But if you want to prevent triggering submake
 # invocation every time you can monitor them on your own.
 $(d)/external_app_DEPS := $(addprefix $(d)/,one two three)
-$(d)/external_app_CMD = make -C $(@D)
+$(d)/external_app_CMD = +make -C $(@D)
