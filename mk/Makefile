@@ -19,7 +19,7 @@ MK := $(TOP)/mk
 # "tree" - updates targets (and their dependencies) in whole subtree
 #          starting at current directory
 # "all"  - updates all targets in the project
-.DEFAULT_GOAL := dir
+.DEFAULT_GOAL := tree
 
 dir : dir_$(RUNDIR)
 tree : tree_$(RUNDIR)
