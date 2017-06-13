@@ -15,7 +15,7 @@
 # directory level.  So if you set it to say AUTOTEST then each each
 # directory will have it's own AUTOTEST_$(dir) variable with value taken
 # from appropriate Rules.mk
-VERB_VARS := MAKEFILE_DEPS TESTS
+VERB_VARS := MAKEFILE_DEPS TESTS SCRIPT_TESTS
 
 # OBJ_VARS - like VERB_VARS but all values taken from Rules.mk have
 # $(OBJPATH) prepended so instead of saying:

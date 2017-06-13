@@ -47,9 +47,10 @@ $(foreach v,$(INHERIT_DIR_VARS_$(d)),$(if $($(v)_$(d)),,$(eval $(v)_$(d) := $($(
 
 # TESTS corresponds to binary/compiled tests
 # SCRIPT_TESTS corresponds to non-compiled tests
-TEST_$(d) :=  $(addprefix $(OBJPATH)/,$(TESTS_$(d)))
+TEST_$(d) :=  $(addprefix $(OBJPATH)/,$(TESTS_$(d)) $(SCRIPT_TESTS_$(d)))
 
-$(foreach test,$(TESTS_$(d)), $(eval $(call compiled_test,$(OBJPATH),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS))))
+$(foreach test,$(TESTS_$(d)), $(eval $(call compiled_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS))))
+$(foreach test,$(SCRIPT_TESTS_$(d)), $(eval $(call script_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS))))
 
 ########################################################################
 # Inclusion of subdirectories rules - only after this line one can     #
