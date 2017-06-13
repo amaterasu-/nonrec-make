@@ -22,7 +22,7 @@ VERB_VARS := MAKEFILE_DEPS
 #   INSTALL_$d := $(OBJPATH)/some_target
 # you can say simply
 #   INSTALL := some_target
-OBJ_VARS := INSTALL_BIN INSTALL_LIB
+OBJ_VARS := INSTALL_BIN INSTALL_LIB TESTS
 
 # DIR_VARS - like VERB_VARS but all values taken from Rules.mk have $(d)
 # prepended (unless value is an absolute path) so you can say:
@@ -261,6 +261,11 @@ endef
 
 define get_subtree
 $($(1)_$(2)) $(foreach sd,$(SUBDIRS_$(2)),$(call get_subtree,$(1),$(sd)))
+endef
+
+# Define an arbitrary dependency
+define define_dep
+$(1): $(2)
 endef
 
 # if we are using out of project build tree then there is no need to

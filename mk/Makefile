@@ -27,6 +27,12 @@ tree : tree_$(RUNDIR)
 clean : clean_$(RUNDIR)
 clean_tree : clean_tree_$(RUNDIR)
 
+# Test support follows the example of clean
+# TODO - I hate that test doesn't test everything in subtree
+.PHONY: test test_tree
+test : test_$(RUNDIR)
+test_tree : test_tree_$(RUNDIR)
+
 # $(d) keeps the path of "current" directory during tree traversal and
 # $(dir_stack) is used for backtracking during traversal
 d := $(TOP)

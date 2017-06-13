@@ -1,1 +1,1 @@
-SUBDIRS = cross-dependencies includes re-archiving
+SUBDIRS = cross-dependencies includes re-archiving testing

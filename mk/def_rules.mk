@@ -69,6 +69,8 @@ LINK.cc = $(call echo_cmd,LINK $@) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(T
 %/$(OBJDIR):
 	@mkdir -p $@
 
+-include $(MK)/testing.mk
+
 # Automatic rules.  Again, since the output is in different directory
 # than source files I cannot count on the built in make rules.  So
 # I keep them in a "macro" (see 'skeleton' below) that is expanded for
