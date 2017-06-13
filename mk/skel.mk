@@ -15,14 +15,14 @@
 # directory level.  So if you set it to say AUTOTEST then each each
 # directory will have it's own AUTOTEST_$(dir) variable with value taken
 # from appropriate Rules.mk
-VERB_VARS := MAKEFILE_DEPS
+VERB_VARS := MAKEFILE_DEPS TESTS
 
 # OBJ_VARS - like VERB_VARS but all values taken from Rules.mk have
 # $(OBJPATH) prepended so instead of saying:
 #   INSTALL_$d := $(OBJPATH)/some_target
 # you can say simply
 #   INSTALL := some_target
-OBJ_VARS := INSTALL_BIN INSTALL_LIB TESTS
+OBJ_VARS := INSTALL_BIN INSTALL_LIB
 
 # DIR_VARS - like VERB_VARS but all values taken from Rules.mk have $(d)
 # prepended (unless value is an absolute path) so you can say:
@@ -267,6 +267,8 @@ endef
 define define_dep
 $(1): $(2)
 endef
+
+abs_or_dir = $(filter /%,$(1)) $(addprefix $(2)/,$(filter-out /%,$(1)))
 
 # if we are using out of project build tree then there is no need to
 # have dist_clean on per directory level and the one below is enough
