@@ -23,6 +23,7 @@ endef
 RUN.sh := sh
 RUN.py := python
 RUN.rb := ruby
+RUN.bash := bash
 
 # TODO - emit different failure
 
