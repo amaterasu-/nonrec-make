@@ -1,4 +1,4 @@
-SUBDIRS = ex1 ex2 external tests
+SUBDIRS = ex1 ex2 external tests completion
 
 .PHONY : tar tar-%
 # To get ID from a tar archive just run:
