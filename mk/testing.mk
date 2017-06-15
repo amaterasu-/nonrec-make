@@ -12,7 +12,7 @@ _TESTING_FAILING_REASSURANCE = $(if $(filter true,$(5)),@echo \"$(2)\" failed as
 # $(4) test arguments
 # $(5) fails
 define compiled_test
-$(1)/$(OBJDIR)/$(2).test: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONREC_MAKEFILES)
+$(1)/$(OBJDIR)/$(2).test: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONREC_MAKEFILES) | $(1)/$(OBJDIR)
 	@rm -f $$@
 	$$(call echo_cmd,RUN $$< $(4)) cd $$(dir $$@) && $(_TESTING_FAILING_PREFIX) $$< $(4) $(_TESTING_FAILING_SUFFIX)
 	$(_TESTING_FAILING_REASSURANCE)
@@ -32,7 +32,7 @@ RUN.rb := ruby
 # $(4) test arguments
 # $(5) fails
 define script_test
-$(1)/$(OBJDIR)/$(2).test: $(1)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONREC_MAKEFILES)
+$(1)/$(OBJDIR)/$(2).test: $(1)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONREC_MAKEFILES) | $(1)/$(OBJDIR)
 	@rm -f $$@
 	$$(call echo_cmd,RUN $$< $(4)) cd $$(dir $$@) && $(_TESTING_FAILING_PREFIX) $(RUN$(suffix $(2))) $$< $(4) $(_TESTING_FAILING_SUFFIX)
 	$(_TESTING_FAILING_REASSURANCE)
