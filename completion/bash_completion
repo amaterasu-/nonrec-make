@@ -1,0 +1,84 @@
+# bash completion overrides for nonrec-make          -*- shell-script -*-
+#
+# The approach is to override the original make completion and insert extra
+# features in front of it
+
+# start by sourcing the original make completion - wherever it may be
+for original in /usr/share/bash-completion/completions/make /etc/bash_completion.d/make ; do
+  if [ -f "$original" ]; then
+    . "$original"
+    break
+  fi
+done
+
+_nonrec_make()
+{
+    local cur prev words cword split
+    _init_completion -s || return
+
+    local orig_lc_all="$LC_ALL"
+    LC_ALL=C # needed to convince case statement to match err,.. case
+
+    # Derive $(TOP) and $(MK)
+    local top mk
+    top=$(pwd)
+    while [ ! -f "$top/Rules.top" ]; do
+      local next=$(dirname "$top")
+      if [ "$next" = "$top" ]; then
+        # We've hit the root - give up
+        break
+      fi
+      top="$next"
+    done
+
+    if [ -f "$top/Rules.top" ]; then
+      mk="$top/mk"
+    else
+      top=
+    fi
+
+    # Only intercept make if there's a Rules.mk
+    if [ -n "$top" ]; then
+      
+      case "$cur" in
+        VERBOSE=*)
+          # options that are true or can be excluded - ie should be true
+          COMPREPLY=( $( compgen -W "true" -- "${cur#*=}" ) )
+          ;;
+
+        COLOR_TTY=*)
+          # options that have no default truth value
+          COMPREPLY=( $( compgen -W "true false" -- "${cur#*=}" ) )
+          ;;
+
+        BUILD_MODE=*)
+          local modes=""
+          for i in $(\ls $mk/build-*.mk 2> /dev/null); do
+            i=${i#$mk/build-}
+            i=${i%%.mk}
+            modes="$modes $i"
+          done
+          COMPREPLY=( $( compgen -W "$modes" -- "${cur#*=}" ) )
+          ;;
+        
+        [A-Z]*)
+          COMPREPLY=( $( compgen -W "BUILD_MODE= VERBOSE= COLOR_TTY=" -- "$cur" ) )
+          compopt -o nospace
+          ;;
+
+        *)
+          ;;
+      esac
+
+    fi
+    
+    LC_ALL="$orig_lc_all"
+
+    if [ -z "$COMPREPLY" ]; then
+      # Defer to normal make completion
+      _make "$@"
+    fi
+} &&
+complete -F _nonrec_make make
+
+# ex: ts=4 sw=4 et filetype=sh
