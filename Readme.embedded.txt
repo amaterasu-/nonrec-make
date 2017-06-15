@@ -115,6 +115,23 @@ tests.
 3. How is test-success determined?  Does the target support processes? exit codes?
 
 
+# Extras
+
+Find yourself typing `make BUILD_MODE=xyz` all the time?
+
+```
+cp completion/bash_completion /etc/bash_completion.d/nonrec-make
+```
+
+Then next time you load your shell:
+
+```
+make B<tab>
+make BUILD_MODE=
+make BUILD_MODE=<tab>
+xyz debug release
+```
+
 # TODO
 
 ## Daytona compatiblity
