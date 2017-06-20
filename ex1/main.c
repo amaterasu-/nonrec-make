@@ -1,4 +1,4 @@
-extern void function_dir_3_file1(void);
+#include "Dir_3/dir_3.h"
 
 int main()
 {
