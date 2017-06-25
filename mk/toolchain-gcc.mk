@@ -6,6 +6,7 @@ AR := $(TOOLCHAIN_PREFIX)ar
 RANLIB := $(TOOLCHAIN_PREFIX)ranlib
 OBJDUMP := $(TOOLCHAIN_PREFIX)objdump
 OBJCOPY := $(TOOLCHAIN_PREFIX)objcopy
+STRIP := $(TOOLCHAIN_PREFIX)strip
 
 # You should probably use this by default
 CPPFLAGS += -Werror
@@ -80,3 +81,7 @@ CXXFLAGS += -std=c++$(CXX_STD)
 else
 CXXFLAGS += -std=c++11
 endif
+
+STRIPFLAGS = --strip-unneeded
+
+STRIP_CMD = $(OBJCOPY) --only-keep-debug $@ $@.dbg && $(STRIP) $(STRIPFLAGS) $@ && $(OBJCOPY) --add-gnu-debuglink=$@.dbg $@

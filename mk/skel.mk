@@ -224,8 +224,17 @@ MAKECMD.a = $(call echo_cmd,AR $@) \
 
 COMMA = ,
 
-MAKECMD.$(SOEXT) = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) -shared -o $@
-DEFAULT_MAKECMD = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) $(if $(MAP_FILE),-Wl$(COMMA)-Map=$@.map) -o $@
+MAKECMD.$(SOEXT) = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) -shared -o $@ \
+	$(if $(STRIP_CMD), && $(STRIP_CMD))
+
+DEFAULT_MAKECMD = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) $(if $(MAP_FILE),-Wl$(COMMA)-Map=$@.map) -o $@ \
+	$(if $(STRIP_CMD), && $(STRIP_CMD))
+
+# Add additional dep rules so you can build .dbg
+ifneq ($(STRIP_CMD),)
+%.dbg: %
+	@touch $@
+endif
 
 ########################################################################
 # Below is a "Blood sugar sex^H^H^Hmake magik" :) - don't touch it     #
