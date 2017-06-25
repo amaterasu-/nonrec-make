@@ -74,3 +74,9 @@ CPPFLAGS += -DBUILD$(subst -,_,$(subst /,_,$(subst $(TOP),,$(@RD))))
 # the export clause becomes active
 
 endif
+
+ifneq ($(CXX_STD),)
+CXXFLAGS += -std=c++$(CXX_STD)
+else
+CXXFLAGS += -std=c++11
+endif
