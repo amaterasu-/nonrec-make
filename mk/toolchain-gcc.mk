@@ -87,8 +87,26 @@ STRIPFLAGS = --strip-unneeded
 
 STRIP_CMD = $(OBJCOPY) --only-keep-debug $@ $@.dbg && $(STRIP) $(STRIPFLAGS) $@ && $(OBJCOPY) --add-gnu-debuglink=$@.dbg $@
 
-#HEX_CMD = $(OBJCOPY) -O ihex $@ $@.hex
-#BIN_CMD = $(OBJCOPY) -O binary $@ $@.bin
-#SIZE_CMD = $(SIZE) $@
+ifeq ($(BARE_METAL_TARGET),true)
+
+HEX_CMD = $(OBJCOPY) -O ihex $@ $@.hex
+BIN_CMD = $(OBJCOPY) -O binary $@ $@.bin
+SIZE_CMD = $(SIZE) $@
+
+# generate map file
+MAP_FILE := true
+
+CXXFLAGS += -fno-exceptions -fno-use-cxa-atexit
+
+ifeq ($(ARM_SEMIHOSTING),true)
+CPPFLAGS += -DARM_SEMIHOSTING
+LDFLAGS +=  --specs=rdimon.specs
+endif
+
+LDFLAGS += --specs=nano.specs
+
+else
 
 CPPFLAGS += -D_REENTRANT -D_POSIX_C_SOURCE=200809L
+
+endif
