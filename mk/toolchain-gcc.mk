@@ -6,6 +6,7 @@ AR := $(TOOLCHAIN_PREFIX)ar
 RANLIB := $(TOOLCHAIN_PREFIX)ranlib
 OBJDUMP := $(TOOLCHAIN_PREFIX)objdump
 OBJCOPY := $(TOOLCHAIN_PREFIX)objcopy
+SIZE := $(TOOLCHAIN_PREFIX)size
 STRIP := $(TOOLCHAIN_PREFIX)strip
 
 # You should probably use this by default
@@ -85,5 +86,9 @@ endif
 STRIPFLAGS = --strip-unneeded
 
 STRIP_CMD = $(OBJCOPY) --only-keep-debug $@ $@.dbg && $(STRIP) $(STRIPFLAGS) $@ && $(OBJCOPY) --add-gnu-debuglink=$@.dbg $@
+
+#HEX_CMD = $(OBJCOPY) -O ihex $@ $@.hex
+#BIN_CMD = $(OBJCOPY) -O binary $@ $@.bin
+#SIZE_CMD = $(SIZE) $@
 
 CPPFLAGS += -D_REENTRANT -D_POSIX_C_SOURCE=200809L

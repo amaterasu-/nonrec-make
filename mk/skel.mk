@@ -228,11 +228,24 @@ MAKECMD.$(SOEXT) = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $
 	$(if $(STRIP_CMD), && $(STRIP_CMD))
 
 DEFAULT_MAKECMD = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) $(if $(MAP_FILE),-Wl$(COMMA)-Map=$@.map) -o $@ \
-	$(if $(STRIP_CMD), && $(STRIP_CMD))
+	$(if $(STRIP_CMD), && $(STRIP_CMD)) \
+	$(if $(SIZE_CMD), && $(SIZE_CMD)) \
+	$(if $(HEX_CMD), && $(HEX_CMD)) \
+	$(if $(BIN_CMD), && $(BIN_CMD))
 
-# Add additional dep rules so you can build .dbg
+# Add additional dep rules to you can build .dbg, .hex, .bin etc,...
 ifneq ($(STRIP_CMD),)
 %.dbg: %
+	@touch $@
+endif
+
+ifneq ($(HEX_CMD),)
+%.hex: %
+	@touch $@
+endif
+
+ifneq ($(BIN_CMD),)
+%.bin: %
 	@touch $@
 endif
 
