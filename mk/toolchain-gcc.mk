@@ -85,3 +85,5 @@ endif
 STRIPFLAGS = --strip-unneeded
 
 STRIP_CMD = $(OBJCOPY) --only-keep-debug $@ $@.dbg && $(STRIP) $(STRIPFLAGS) $@ && $(OBJCOPY) --add-gnu-debuglink=$@.dbg $@
+
+CPPFLAGS += -D_REENTRANT -D_POSIX_C_SOURCE=200809L

@@ -78,7 +78,7 @@ INCLUDES :=
 # that builds the dependency files (one can find examples on the web).
 # Note that I'm adding DIR_INCLUDES before INCLUDES so that they have
 # precedence.
-CPPFLAGS = -MMD -D_REENTRANT -D_POSIX_C_SOURCE=200112L -D__EXTENSIONS__ \
+CPPFLAGS = -MMD \
 	   $(DIR_CPPFLAGS) $(DIR_INCLUDES) $(PLATFORM_CPPFLAGS) $(addprefix -I,$(INCLUDES))
 
 # Linker flags.  The values below will use what you've specified for
