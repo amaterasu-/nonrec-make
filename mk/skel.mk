@@ -31,6 +31,10 @@ OBJ_VARS := INSTALL_BIN INSTALL_LIB
 #   INSTALL_DOC_$d := $(d)/Readme.txt
 DIR_VARS := INSTALL_DOC INSTALL_INC
 
+# PLATFORM_VARS are variables that are defined per target to accommodate
+# cross-platform code
+PLATFORM_VARS := OS CPU PLATFORM BOARD
+
 # NOTE: There is generic macro defined below with which you can get all
 # values of given variable from some subtree e.g.:
 #   $(call get_subtree,INSTALL,dir)
@@ -52,6 +56,9 @@ DIR_CPPFLAGS = $(CPPFLAGS_$(@RD))
 DIR_CFLAGS = $(CFLAGS_$(@RD))
 DIR_CXXFLAGS = $(CXXFLAGS_$(@RD))
 
+# Define platform definitions - eg OS := Linux -> OS_LINUX
+PLATFORM_CPPFLAGS = $(foreach var,$(PLATFORM_VARS),$(if $(value $(var)),-D$(shell echo $(var)_$(value $(var)) | tr a-z A-Z )))
+
 ########################################################################
 #                       Global flags/settings                          #
 ########################################################################
@@ -72,7 +79,7 @@ INCLUDES :=
 # Note that I'm adding DIR_INCLUDES before INCLUDES so that they have
 # precedence.
 CPPFLAGS = -MMD -D_REENTRANT -D_POSIX_C_SOURCE=200112L -D__EXTENSIONS__ \
-	   $(DIR_CPPFLAGS) $(DIR_INCLUDES) $(addprefix -I,$(INCLUDES))
+	   $(DIR_CPPFLAGS) $(DIR_INCLUDES) $(PLATFORM_CPPFLAGS) $(addprefix -I,$(INCLUDES))
 
 # Linker flags.  The values below will use what you've specified for
 # particular target or directory but if you have some flags or libraries
