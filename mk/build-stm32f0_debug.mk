@@ -9,3 +9,7 @@ PLATFORM := stm32f0
 
 # Real projects will want to write their own C-library-hosting
 #ARM_SEMIHOSTING := true
+
+# Require directories to actually ask for this target
+# - match using OPT_IN_PLATFORMS on OS/CPU/PLATFORM
+PLATFORM_OPT_IN := true
