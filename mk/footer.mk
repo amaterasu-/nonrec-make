@@ -52,6 +52,19 @@ TEST_$(d) :=  $(addprefix $(OBJPATH)/,$(TESTS_$(d)) $(SCRIPT_TESTS_$(d)))
 $(foreach test,$(TESTS_$(d)), $(eval $(call compiled_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS),$($(test)_FAILS))))
 $(foreach test,$(SCRIPT_TESTS_$(d)), $(eval $(call script_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS),$($(test)_FAILS))))
 
+# Disable directory for PLATFORM_OPT_IN=true build targets unless
+# specified as OPT_IN_PLATFORMS
+ifeq ($(PLATFORM_OPT_IN),true)
+ifeq ($(filter $(foreach v,$(PLATFORM_VARS),$(value $(v))),$(OPT_IN_PLATFORMS_$(d))),)
+# Disable targets on OPT_IN platforms that are not selected by OPT_IN_PLATFORMS
+TARGETS_$(d) :=
+SRCS_$(d) :=
+OBJS_$(d) :=
+TEST_$(d) :=
+endif
+endif
+
+
 ########################################################################
 # Inclusion of subdirectories rules - only after this line one can     #
 # refer to subdirectory targets and so on.                             #
