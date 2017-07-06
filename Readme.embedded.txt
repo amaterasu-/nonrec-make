@@ -147,6 +147,31 @@ subdirectories otherwise interference between BUILD_MODEs would occur.
 
 Thus `clean_extra` is deprecated
 
+## Cross compilation
+
+Managing multiple target platforms can become complicated - to help
+keep code and makefiles cleaner we define a set of platform variables
+that may describe a given platform
+
+```
+PLATFORM_VARS := OS CPU PLATFORM BOARD
+```
+
+Example:
+
+```
+OS := Linux
+CPU := x86_64
+PLATFORM := pc
+```
+
+Each of these variables will be defined for the C pre-processor - eg
+`-DOS_LINUX` `-DCPU_X86_64` `-DPLATFORM_PC`
+
+### Bare-metal support
+
+Multi-target projects often want to mix common code shared by multiple platforms, especially to allow cross-compilation and testing on host.  For similar targets
+
 ## Testing
 
 Testing should be a first-class target of any usable build system.
@@ -206,6 +231,11 @@ xyz debug release
 ## Daytona compatiblity
 
 LINKORDER? DEPENDS? Tests vs binaries?
+
+Filter directories and/or targets by OS/CPU/PLATFORM/BOARD/PROJECT.
+Currently only whole-platform opt-in support for OPT_IN_PLATFORMS is
+working.
+
 
 ## Host builds for embedded cross targets
 
