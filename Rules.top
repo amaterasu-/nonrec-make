@@ -1,4 +1,10 @@
-SUBDIRS = ex1 ex2 external tests completion
+# Daytona mode is optional - don't enable it unless you want it for
+# your project
+ENABLE_DAYTONA := true
+
+SUBDIRS = ex1 ex2 external \
+	$(if $(filter true,$(ENABLE_DAYTONA)),daytona) \
+	tests completion
 
 .PHONY : tar tar-%
 # To get ID from a tar archive just run:

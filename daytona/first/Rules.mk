@@ -1,0 +1,2 @@
+DAYTONA := true
+LIBS := m
