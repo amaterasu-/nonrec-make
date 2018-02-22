@@ -1,5 +1,6 @@
 SHELL := /bin/bash
 RUNDIR := $(CURDIR)
+START_TIME := $(shell date +%s%3N)
 ifndef TOP
 TOP := $(shell \
        top=$(RUNDIR); \
@@ -55,4 +56,5 @@ $(eval $(value FOOTER))
 
 # This is just a convenience - to let you know when make has stopped
 # interpreting make files and started their execution.
-$(info Rules generated $(if $(BUILD_MODE),for "$(BUILD_MODE)" mode,)...)
+END_TIME := $(shell date +%s%3N)
+$(info Rules generated $(if $(BUILD_MODE),for "$(BUILD_MODE)" mode,)... ($(shell expr $(END_TIME) - $(START_TIME))ms))
