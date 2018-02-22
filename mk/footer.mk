@@ -42,6 +42,43 @@ endif
 $(foreach v,$(INHERIT_DIR_VARS_$(d)),$(if $($(v)_$(d)),,$(eval $(v)_$(d) := $($(v)_$(parent_dir)))))
 
 ########################################################################
+# Daytona
+########################################################################
+
+ifeq ($(DAYTONA_$(d)),true)
+
+# LINKORDER is only defined at top-level
+ifneq ($(LINKORDER_$(parent_dir)),)
+LINKORDER_$(d) := $(LINKORDER_$(parent_dir))
+endif
+
+SRCS_$(d) := $(notdir $(wildcard $(addprefix $(d)/,*.c *.cpp *.cc)))
+OBJS_$(d) := $(addprefix $(OBJPATH)/,$(addsuffix .o,$(basename $(SRCS_$(d)))))
+
+daytona_lib := lib$(notdir $(d)).a
+
+DEPS_$(OBJPATH)/$(daytona_lib) := $(filter-out _%,$(notdir $(OBJS_$(d))))
+ifneq ($(value DEPS_$(OBJPATH)/$(daytona_lib)),)
+TARGETS_$(d) := $(OBJPATH)/$(daytona_lib)
+else
+daytona_lib :=
+endif
+
+daytona_test_lib_o := $(filter __%,$(notdir $(OBJS_$(d))))
+daytona_executable_o := $(filter-out $(daytona_test_lib_o),$(filter _%,$(notdir $(OBJS_$(d)))))
+
+TARGETS_$(d) += $(addprefix $(OBJPATH)/,$(basename $(daytona_executable_o)))
+
+$(foreach exe,$(daytona_executable_o),\
+	$(eval $(call daytona_executable,$(OBJPATH)/,$(basename $(exe)),\
+	$(addprefix $(OBJPATH)/,$(daytona_lib) $(daytona_test_lib_o)),\
+	$(DEPENDS_$(d)),\
+	$(LIBS_$(d)),\
+	$(LINKORDER_$(d)))))
+
+endif # Daytona
+
+########################################################################
 # Testing
 ########################################################################
 

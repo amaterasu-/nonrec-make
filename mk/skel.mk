@@ -17,6 +17,10 @@
 # from appropriate Rules.mk
 VERB_VARS := MAKEFILE_DEPS TESTS SCRIPT_TESTS OPT_IN_PLATFORMS
 
+ifeq ($(ENABLE_DAYTONA),true)
+VERB_VARS += DAYTONA DEPENDS LIBS LINKORDER
+endif
+
 # OBJ_VARS - like VERB_VARS but all values taken from Rules.mk have
 # $(OBJPATH) prepended so instead of saying:
 #   INSTALL_$d := $(OBJPATH)/some_target
@@ -318,6 +322,22 @@ ifneq ($(strip $(TOP_BUILD_DIR)),)
 dist_clean :
 	rm -rf $(TOP_BUILD_DIR)
 endif
+
+define daytona_executable
+# $(1) - OBJPATH
+# $(2) - executable
+# $(3) - implicit daytona libs
+# $(4) - DEPENDS
+# $(5) - LIBS
+# $(6) - LINKORDER
+
+#               exe     implicit   items from LINKORDER (in LINKORDER)                                                         remaining items
+DEPS_$(1)$(2) = $(2).o  $(3)       $(foreach l,$(filter $(filter-out /%,$(4)),$(6)),$(TOP)/$(l)/$(OBJDIR)/lib$(notdir $(l)).a) $(filter-out $(6),$(4))
+LIBS_$(1)$(2) = $(addprefix -l,$(5))
+# Allow to be specified
+LDFLAGS_$(1)$(2) = $(value $(2)_LDFLAGS)
+
+endef
 
 # Suck in the default rules
 include $(MK)/def_rules.mk
