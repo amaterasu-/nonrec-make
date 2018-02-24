@@ -66,6 +66,15 @@ _nonrec_make()
           compopt -o nospace
           ;;
 
+        /*)
+          # filter on current directory
+          local filter=$(pwd)
+          # unless current completion is outside this path
+          [ "${filter#${cur}}" == "${filter}" ] && filter="${cur}"
+          local completions=$(make -C ${top} completion_list_targets COMPLETION_FILTER="${filter}" | sed -n 's/^COMPLETION_TARGET_LIST=//p')
+          COMPREPLY=( $( compgen -W "${completions}" -- "$cur" ) )
+          ;;
+
         *)
           ;;
       esac

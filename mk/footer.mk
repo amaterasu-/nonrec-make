@@ -80,6 +80,17 @@ TESTS_$(d) += $(filter-out $(NON_TEST_$(d)),$(basename $(daytona_executable_o)))
 
 endif # Daytona
 
+# Completion targets
+ifneq ($(filter completion_list_targets,$(MAKECMDGOALS)),)
+# Add all targets + when completing in the final directory
+# (COMPLETION_FILTER matches OBJPATH) add the test/run/debug targets.
+COMPLETION_TARGET_LIST += $(filter-out %.a %.o,$(TARGETS_$(d))) \
+	$(addsuffix .test,$(addprefix $(OBJPATH)/,$(SCRIPT_TESTS_$(d)))) \
+	$(if $(filter $(dir $(COMPLETION_FILTER)),$(OBJPATH)/), \
+		$(addprefix $(OBJPATH)/,$(foreach test,$(TESTS_$(d)),$(test).test $(test).debug)) \
+		)
+endif
+
 ########################################################################
 # Testing
 ########################################################################
@@ -121,8 +132,9 @@ $(foreach sd,$(SUBDIRS),$(eval $(call include_subdir_rules,$(sd))))
 .PHONY: dir_$(d) clean_$(d) clean_extra_$(d) clean_tree_$(d) dist_clean_$(d) test_$(d) test_tree_$(d)
 .SECONDARY: $(OBJPATH)
 
-# Stop processing here for syntax-checking
-ifeq ($(filter check-syntax,$(MAKECMDGOALS)),)
+# Stop processing here for syntax-checking or completion listing
+# NOTE: bash completion defines .DEFAULT
+ifeq ($(filter check-syntax completion_% .DEFAULT,$(MAKECMDGOALS)),)
 
 # Whole tree targets
 all :: $(TARGETS_$(d))

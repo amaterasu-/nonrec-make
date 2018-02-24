@@ -40,6 +40,9 @@ ifneq ($(SYNTAX_CHECK_MODE),)
 check-syntax: $(addsuffix .check-syntax,$(addprefix $(TOP)/,$(CHK_SOURCES)))
 endif
 
+# empty list of completion targets to be filled for completion_list_targets
+COMPLETION_TARGET_LIST :=
+
 # $(d) keeps the path of "current" directory during tree traversal and
 # $(dir_stack) is used for backtracking during traversal
 d := $(TOP)
@@ -59,6 +62,10 @@ $(eval $(value FOOTER))
 
 # Optional final makefile where you can specify additional targets
 -include $(TOP)/final.mk
+
+.PHONY: completion_list_targets
+completion_list_targets:
+	@echo COMPLETION_TARGET_LIST=$(filter $(COMPLETION_FILTER)%,$(COMPLETION_TARGET_LIST))
 
 # This is just a convenience - to let you know when make has stopped
 # interpreting make files and started their execution.
