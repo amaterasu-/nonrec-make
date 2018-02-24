@@ -1,2 +1,2 @@
-HOST_ARCH := Linux-arm7l
+include $(MK)/platform-rpi.mk
 RELEASE := true
