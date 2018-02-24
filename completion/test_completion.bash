@@ -70,3 +70,16 @@ test_contains "true" $completion
 completion=$(complete_at_end_of_line make BUILD_MODE=)
 test_contains "debug" $completion
 test_contains "release" $completion
+
+script=$(pwd)/$(basename ${0})
+objdir=obj/$(basename $(pwd))
+(
+  # Run commands from below this directory
+  cd ../../..
+  wd=$(pwd)
+  completion=$(complete_at_end_of_line make  /)
+  # includes this test
+  test_contains "${script}.test" $completion
+  # and other tests
+  test_contains "${wd}/tests/testing/${objdir}/passes" $completion
+)
