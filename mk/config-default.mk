@@ -16,3 +16,6 @@ ifneq ($(filter undefined default,$(origin RANLIB)),)
 endif
 
 OPEN_GL_LIBS := -lGL -lGLU
+
+# the default target runs native tests
+PLATFORM_TEST := native
