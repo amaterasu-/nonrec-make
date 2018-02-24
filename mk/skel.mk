@@ -17,10 +17,6 @@
 # from appropriate Rules.mk
 VERB_VARS := MAKEFILE_DEPS TESTS SCRIPT_TESTS OPT_IN_PLATFORMS
 
-ifeq ($(ENABLE_DAYTONA),true)
-VERB_VARS += DAYTONA DEPENDS LIBS LINKORDER
-endif
-
 # OBJ_VARS - like VERB_VARS but all values taken from Rules.mk have
 # $(OBJPATH) prepended so instead of saying:
 #   INSTALL_$d := $(OBJPATH)/some_target
@@ -139,6 +135,10 @@ endif
 # Use host/build specific config files to override default extension
 # for shared libraries 
 SOEXT := $(or $(SOEXT),so)
+
+ifeq ($(ENABLE_DAYTONA),true)
+VERB_VARS += DAYTONA DEPENDS LIBS LINKORDER NON_TEST
+endif
 
 ########################################################################
 #         A more advanced part - if you change anything below          #
