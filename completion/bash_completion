@@ -39,7 +39,7 @@ _nonrec_make()
 
     # Only intercept make if there's a Rules.mk
     if [ -n "$top" ]; then
-      
+
       case "$cur" in
         VERBOSE=*)
           # options that are true or can be excluded - ie should be true
@@ -60,7 +60,7 @@ _nonrec_make()
           done
           COMPREPLY=( $( compgen -W "$modes" -- "${cur#*=}" ) )
           ;;
-        
+
         [A-Z]*)
           COMPREPLY=( $( compgen -W "BUILD_MODE= VERBOSE= COLOR_TTY=" -- "$cur" ) )
           compopt -o nospace
@@ -71,7 +71,7 @@ _nonrec_make()
       esac
 
     fi
-    
+
     LC_ALL="$orig_lc_all"
 
     if [ -z "$COMPREPLY" ]; then
