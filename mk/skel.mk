@@ -91,6 +91,10 @@ LDLIBS :=
 ########################################################################
 
 # Now we suck in configuration ...
+
+# optional top-level config.mk in host repository
+-include $(TOP)/config.mk
+
 include $(MK)/config.mk
 
 # ... optional build mode specific flags ...
