@@ -104,14 +104,21 @@ LDLIBS :=
 
 include $(MK)/config.mk
 
+# config.mk may define HOSTED_CONFIG_DIR to provide a place to define
+# its own build files outside nonrec-make itself.  If the such a
+# build-*.mk or config-*.mk is found in $(HOSTED_CONFIG_DIR) it will
+# be used in preference to $(MK)/build-*.mk.  Such files can (and
+# should) include the original from $(MK) to make their jobs easier
+
 # ... optional build mode specific flags ...
 ifdef BUILD_MODE
-  -include $(MK)/build-$(BUILD_MODE).mk
+  -include $(firstword $(wildcard $(addsuffix /build-$(BUILD_MODE).mk,$(HOSTED_CONFIG_DIR) $(MK))))
 endif
 
 # ... host and build specific settings ...
-ifneq ($(wildcard $(MK)/config-$(BUILD_ARCH)_$(HOST_ARCH).mk),)
-  include $(MK)/config-$(BUILD_ARCH)_$(HOST_ARCH).mk
+ARCH_BUILD_CONFIG_MK := $(firstword $(wildcard $(addsuffix /config-$(BUILD_ARCH)_$(HOST_ARCH).mk,$(HOSTED_CONFIG_DIR) $(MK))))
+ifneq ($(ARCH_BUILD_CONFIG_MK),)
+  include $(ARCH_BUILD_CONFIG_MK)
 else
   include $(MK)/config-default.mk
 endif

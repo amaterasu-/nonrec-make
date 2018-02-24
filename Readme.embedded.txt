@@ -208,6 +208,33 @@ tests.
 2. Test dependencies - test files need to be made available on the remote target.  network?  shares?  scp/rsync?
 3. How is test-success determined?  Does the target support processes? exit codes?
 
+# Configuration
+
+The recommended way to use nonrec-make is to load the git repository
+as a sub-module.  To avoid your local customisations having to live in
+a foreign repoisitory you can reconfigure nonrec-make from files in
+your local repository.
+
+If present, next to your Rules.top file, you may provide a `config.mk`
+file for setting project-specific defaults.
+
+To override build and config files (or provide your own build-modes
+and targets) your `config.mk` should specify `HOSTED_CONFIG_DIR` as a
+directory to hold `build-*.mk` and `config-*.mk` files.  Recommended
+values would be `$(TOP)/build` or `$(TOP)/config` or similar.
+
+Files in `HOSTED_CONFIG_DIR` can and should include files from `$(MK)`
+to extend or modify core behaviour.
+
+Example `config.mk`
+
+```make
+# use Daytona extensions
+ENABLE_DAYTONA := true
+
+# Provide location for build-modes and config files
+HOSTED_CONFIG_DIR = $(TOP)/build
+```
 
 # Extras
 
