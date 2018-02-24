@@ -45,12 +45,16 @@ $(foreach v,$(INHERIT_DIR_VARS_$(d)),$(if $($(v)_$(d)),,$(eval $(v)_$(d) := $($(
 # Testing
 ########################################################################
 
+ifneq ($(filter native,$(PLATFORM_TEST)),)
+# TODO native only supported for now - no cross-testing
+
 # TESTS corresponds to binary/compiled tests
 # SCRIPT_TESTS corresponds to non-compiled tests
 TEST_$(d) :=  $(addprefix $(OBJPATH)/,$(TESTS_$(d)) $(SCRIPT_TESTS_$(d)))
 
 $(foreach test,$(TESTS_$(d)), $(eval $(call compiled_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS),$($(test)_FAILS))))
 $(foreach test,$(SCRIPT_TESTS_$(d)), $(eval $(call script_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS),$($(test)_FAILS))))
+endif
 
 ########################################################################
 # OPT_IN_PLATFORMS
