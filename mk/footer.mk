@@ -87,8 +87,8 @@ ifneq ($(filter completion_list_targets,$(MAKECMDGOALS)),)
 COMPLETION_TARGET_LIST += $(filter-out %.a %.o,$(TARGETS_$(d))) \
 	$(addsuffix .test,$(addprefix $(OBJPATH)/,$(SCRIPT_TESTS_$(d)))) \
 	$(if $(filter $(dir $(COMPLETION_FILTER)),$(OBJPATH)/), \
-		$(addprefix $(OBJPATH)/,$(foreach test,$(TESTS_$(d)),$(test).test $(test).debug)) \
-		)
+		$(addprefix $(OBJPATH)/,$(foreach test,$(TESTS_$(d)),$(test).run $(test).test $(test).debug)) \
+		$(addsuffix .run,$(addprefix $(OBJPATH)/,$(SCRIPT_TESTS_$(d)))))
 endif
 
 ########################################################################

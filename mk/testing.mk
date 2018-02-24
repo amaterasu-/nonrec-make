@@ -18,6 +18,10 @@ $(1)/$(OBJDIR)/$(2).test: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NON
 	$(_TESTING_FAILING_REASSURANCE)
 	@touch $$@
 
+.PHONY: $(1)/$(OBJDIR)/$(2).run
+$(1)/$(OBJDIR)/$(2).run: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONREC_MAKEFILES) | $(1)/$(OBJDIR)
+	$$(call echo_cmd,RUN $$< $(4)) cd $$(dir $$@) && $$< $(4)
+
 .PHONY: $(1)/$(OBJDIR)/$(2).debug
 $(1)/$(OBJDIR)/$(2).debug: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1))
 	gdb -ex "break main" -ex "run" \
@@ -44,5 +48,9 @@ $(1)/$(OBJDIR)/$(2).test: $(1)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONREC_MAKEFI
 	$$(call echo_cmd,RUN $$< $(4)) cd $$(dir $$@) && $(_TESTING_FAILING_PREFIX) $(RUN$(suffix $(2))) $$< $(4) $(_TESTING_FAILING_SUFFIX)
 	$(_TESTING_FAILING_REASSURANCE)
 	@touch $$@
+
+.PHONY: $(1)/$(OBJDIR)/$(2).run
+$(1)/$(OBJDIR)/$(2).run: $(1)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONREC_MAKEFILES) | $(1)/$(OBJDIR)
+	$$(call echo_cmd,RUN $$< $(4)) cd $$(dir $$@) && $(RUN$(suffix $(2))) $$< $(4)
 
 endef
