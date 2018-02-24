@@ -99,13 +99,14 @@ clean_extra_$(d) :
 
 clean_tree_$(d) : clean_$(d) $(foreach sd,$(SUBDIRS_$(d)),clean_tree_$(sd))
 
+# Skip the target rules generation and inclusion of the dependencies
+# when we just want to clean up things :)
+ifeq ($(filter clean clean_% dist_clean,$(MAKECMDGOALS)),)
+
 test_tree_$(d) : test_$(d) $(foreach sd,$(SUBDIRS_$(d)),test_tree_$(sd))
 
 test_$(d): $(foreach test,$(TEST_$(d)),$(test).test)
 
-# Skip the target rules generation and inclusion of the dependencies
-# when we just want to clean up things :)
-ifeq ($(filter clean clean_% dist_clean,$(MAKECMDGOALS)),)
 
 SUBDIRS_TGTS := $(foreach sd,$(SUBDIRS_$(d)),$(TARGETS_$(sd)))
 
