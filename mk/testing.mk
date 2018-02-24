@@ -18,6 +18,12 @@ $(1)/$(OBJDIR)/$(2).test: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NON
 	$(_TESTING_FAILING_REASSURANCE)
 	@touch $$@
 
+.PHONY: $(1)/$(OBJDIR)/$(2).debug
+$(1)/$(OBJDIR)/$(2).debug: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1))
+	gdb -ex "break main" -ex "run" \
+		$$(addprefix -x=,$(wildcard $(1)/$(2).debug)) \
+		--args $(1)/$(OBJDIR)/$(2) $(4)
+
 endef
 
 RUN.sh := sh
