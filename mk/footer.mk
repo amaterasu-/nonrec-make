@@ -76,6 +76,8 @@ $(foreach exe,$(daytona_executable_o),\
 	$(LIBS_$(d)),\
 	$(LINKORDER_$(d)))))
 
+TESTS_$(d) += $(filter-out $(NON_TEST_$(d)),$(basename $(daytona_executable_o)))
+
 endif # Daytona
 
 ########################################################################
