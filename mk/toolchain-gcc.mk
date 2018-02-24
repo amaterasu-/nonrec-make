@@ -108,5 +108,6 @@ LDFLAGS += --specs=nano.specs
 else
 
 CPPFLAGS += -D_REENTRANT -D_POSIX_C_SOURCE=200809L
+CPPFLAGS += -pthread
 
 endif
