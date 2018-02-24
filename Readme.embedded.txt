@@ -263,6 +263,15 @@ Filter directories and/or targets by OS/CPU/PLATFORM/BOARD/PROJECT.
 Currently only whole-platform opt-in support for OPT_IN_PLATFORMS is
 working.
 
+## Flymake
+
+Flymake support is included for C/C++ files.  Currently this only
+supports the host target (or whatever BUILD_MODE is in you editor).
+
+Ideally we'd work out a way to choose the best cross target for a
+given file and compile with that if appropriate.  Simplest is to
+target platforms that are specified by OPT_IN or similar.  More
+general cross support is probably a little harder.
 
 ## Host builds for embedded cross targets
 

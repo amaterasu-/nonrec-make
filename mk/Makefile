@@ -34,6 +34,12 @@ clean_tree : clean_tree_$(RUNDIR)
 test : test_$(RUNDIR)
 test_tree : test_tree_$(RUNDIR)
 
+ifneq ($(SYNTAX_CHECK_MODE),)
+.phony: check-syntax
+
+check-syntax: $(addsuffix .check-syntax,$(addprefix $(TOP)/,$(CHK_SOURCES)))
+endif
+
 # $(d) keeps the path of "current" directory during tree traversal and
 # $(dir_stack) is used for backtracking during traversal
 d := $(TOP)

@@ -52,6 +52,10 @@ TEST_$(d) :=  $(addprefix $(OBJPATH)/,$(TESTS_$(d)) $(SCRIPT_TESTS_$(d)))
 $(foreach test,$(TESTS_$(d)), $(eval $(call compiled_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS),$($(test)_FAILS))))
 $(foreach test,$(SCRIPT_TESTS_$(d)), $(eval $(call script_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS),$($(test)_FAILS))))
 
+########################################################################
+# OPT_IN_PLATFORMS
+########################################################################
+
 # Disable directory for PLATFORM_OPT_IN=true build targets unless
 # specified as OPT_IN_PLATFORMS
 ifeq ($(PLATFORM_OPT_IN),true)
@@ -73,6 +77,9 @@ $(foreach sd,$(SUBDIRS),$(eval $(call include_subdir_rules,$(sd))))
 
 .PHONY: dir_$(d) clean_$(d) clean_extra_$(d) clean_tree_$(d) dist_clean_$(d) test_$(d) test_tree_$(d)
 .SECONDARY: $(OBJPATH)
+
+# Stop processing here for syntax-checking
+ifeq ($(filter check-syntax,$(MAKECMDGOALS)),)
 
 # Whole tree targets
 all :: $(TARGETS_$(d))
@@ -145,4 +152,5 @@ endif
 dir_$(d) : $(TARGETS_$(d))
 
 endif
+endif # check-syntax
 endef

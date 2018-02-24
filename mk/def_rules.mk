@@ -70,6 +70,7 @@ LINK.cc = $(call echo_cmd,LINK $@) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(T
 	@mkdir -p $@
 
 -include $(MK)/testing.mk
+-include $(MK)/check-syntax.mk
 
 # Automatic rules.  Again, since the output is in different directory
 # than source files I cannot count on the built in make rules.  So
