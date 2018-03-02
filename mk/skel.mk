@@ -219,18 +219,25 @@ SRCS_VPATH := src
 # Creating archives gets more complicated if some dependencies are themselves
 # archives. In this case, the contents have to be extracted and archived again
 # in a larger archive.
+EXTRACT_LNAME = $(notdir $(basename $(lib)))
 EXTRACT_DIR = $@_extract
 MAKECMD.a = $(call echo_cmd,AR $@) \
-	$(if $(DEP_OBJS?), \
-		$(AR) $(ARFLAGS) $@ $(DEP_OBJS?) \
+	$(if $(SHOW_DEPS),echo $@_DEPS=$^ | tr " " "\n" && )\
+	rm -f $@ && \
+	$(if $(DEP_OBJS), \
+		$(AR) $(ARFLAGS) $@ $(DEP_OBJS) \
 		&&) \
-	$(if $(DEP_ARCH?), \
-		mkdir -p $(EXTRACT_DIR) \
-		&& cd $(EXTRACT_DIR) \
-		$(foreach lib,$(DEP_ARCH?),&& $(AR) xo $(lib)) \
-		&& cd - \
-		&& $(AR) $(ARFLAGS) $@ $(EXTRACT_DIR)/*.o \
+	$(if $(DEP_ARCH), \
+		rm -rf $(EXTRACT_DIR) \
+		&& mkdir -p $(EXTRACT_DIR) \
+		$(foreach lib,$(DEP_ARCH), && mkdir $(EXTRACT_DIR)/$(EXTRACT_LNAME) && cd $(EXTRACT_DIR)/$(EXTRACT_LNAME) && $(AR) xo $(lib) && (for i in *.o; do mv $$i $(EXTRACT_LNAME)_$$i ; done) && cd - > /dev/null) \
+		&& $(AR) $(ARFLAGS) $@ $(foreach lib,$(DEP_ARCH),$(EXTRACT_DIR)/$(EXTRACT_LNAME)/*.o) \
 		&& rm -rf $(EXTRACT_DIR) \
+		&&) \
+	$(if $(strip $(DEP_OBJS?) $(DEP_ARCH)),, \
+		$(CC) -x c -c -o $@.empty.o /dev/null \
+		&& $(AR) $(ARFLAGS) $@ $@.empty.o \
+		&& rm -f $@.empty.o \
 		&&) \
 	$(RANLIB) $@
 

@@ -9,6 +9,8 @@ OBJCOPY := $(TOOLCHAIN_PREFIX)objcopy
 SIZE := $(TOOLCHAIN_PREFIX)size
 STRIP := $(TOOLCHAIN_PREFIX)strip
 
+ARFLAGS := $(ARFLAGS)D
+
 # You should probably use this by default
 CPPFLAGS += -Werror
 
