@@ -77,9 +77,10 @@ INCLUDES :=
 # good enough for me.  You can improve this by using a special script
 # that builds the dependency files (one can find examples on the web).
 # Note that I'm adding DIR_INCLUDES before INCLUDES so that they have
-# precedence.
+# precedence.  And DIR_CPPFLAGS after PLATFORM_CPPFLAGS so they can
+# override (eg unset).
 CPPFLAGS = -MMD \
-	   $(DIR_CPPFLAGS) $(DIR_INCLUDES) $(PLATFORM_CPPFLAGS) $(addprefix -I,$(INCLUDES))
+	   $(PLATFORM_CPPFLAGS) $(DIR_CPPFLAGS) $(DIR_INCLUDES) $(addprefix -I,$(INCLUDES))
 
 # Linker flags.  The values below will use what you've specified for
 # particular target or directory but if you have some flags or libraries
