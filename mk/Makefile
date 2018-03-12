@@ -67,6 +67,10 @@ $(eval $(value FOOTER))
 completion_list_targets:
 	@echo COMPLETION_TARGET_LIST=$(filter $(COMPLETION_FILTER)%,$(COMPLETION_TARGET_LIST))
 
+.PHONY: completion_list_build_dirs
+completion_list_build_dirs:
+	@echo COMPLETION_BUILD_DIRS_LIST=$(firstword $(HOSTED_CONFIG_DIR) $(MK))
+
 # This is just a convenience - to let you know when make has stopped
 # interpreting make files and started their execution.
 END_TIME := $(shell date +%s%3N)

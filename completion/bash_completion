@@ -24,10 +24,13 @@ _nonrec_make_find_arguments()
 
 _nonrec_all_modes()
 {
-  for i in $(\ls $mk/build-*.mk 2> /dev/null); do
-    i=${i#$mk/build-}
-    i=${i%%.mk}
-    echo $i
+  local build_dirs=$(make -C ${top} completion_list_build_dirs | sed -n 's/^COMPLETION_BUILD_DIRS_LIST=//p')
+  for dir in $build_dirs; do
+    for i in $(\ls $dir/build-*.mk 2> /dev/null); do
+      i=${i#$dir/build-}
+      i=${i%%.mk}
+      echo $i
+    done
   done
 }
 
