@@ -69,7 +69,9 @@ LINK.cc = $(call echo_cmd,LINK $@) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(T
 %/$(OBJDIR):
 	@mkdir -p $@
 
--include $(MK)/testing.mk
+ifneq ($(PLATFORM_TEST),)
+-include $(MK)/testing-$(PLATFORM_TEST).mk
+endif
 -include $(MK)/check-syntax.mk
 
 # Automatic rules.  Again, since the output is in different directory

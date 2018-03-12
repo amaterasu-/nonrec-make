@@ -80,30 +80,48 @@ TESTS_$(d) += $(filter-out $(NON_TEST_$(d)),$(basename $(daytona_executable_o)))
 
 endif # Daytona
 
+########################################################################
+# Testing
+########################################################################
+
+# define class of tests supported by each platform
+TEST_PLATFORM_SUPPORTS_native := binary script debug
+# TODO - not implemented yet
+# TEST_PLATFORM_SUPPORTS_ssh := binary script debug
+test_platform_supports = $(filter $(1),$(TEST_PLATFORM_SUPPORTS_$(PLATFORM_TEST)))
+
 # Completion targets
 ifneq ($(filter completion_list_targets,$(MAKECMDGOALS)),)
 # Add all targets + when completing in the final directory
 # (COMPLETION_FILTER matches OBJPATH) add the test/run/debug targets.
 COMPLETION_TARGET_LIST += $(filter-out %.a %.o,$(TARGETS_$(d))) \
-	$(addsuffix .test,$(addprefix $(OBJPATH)/,$(SCRIPT_TESTS_$(d)))) \
+	$(if $(call test_platform_supports,script), \
+		$(addsuffix .test,$(addprefix $(OBJPATH)/,$(SCRIPT_TESTS_$(d))))) \
 	$(if $(filter $(dir $(COMPLETION_FILTER)),$(OBJPATH)/), \
-		$(addprefix $(OBJPATH)/,$(foreach test,$(TESTS_$(d)),$(test).run $(test).test $(test).debug)) \
-		$(addsuffix .run,$(addprefix $(OBJPATH)/,$(SCRIPT_TESTS_$(d)))))
+		$(addprefix $(OBJPATH)/,$(foreach test,$(TESTS_$(d)),\
+			$(if $(call test_platform_supports,binary),$(test).run $(test).test) \
+			$(if $(call test_platform_supports,debug),$(test).debug))) \
+		$(if $(call test_platform_supports,script), \
+			$(addsuffix .run,$(addprefix $(OBJPATH)/,$(SCRIPT_TESTS_$(d))))))
 endif
 
-########################################################################
-# Testing
-########################################################################
-
-ifneq ($(filter native,$(PLATFORM_TEST)),)
-# TODO native only supported for now - no cross-testing
+ifneq ($(call test_platform_supports,binary script debug),)
 
 # TESTS corresponds to binary/compiled tests
 # SCRIPT_TESTS corresponds to non-compiled tests
-TEST_$(d) :=  $(addprefix $(OBJPATH)/,$(TESTS_$(d)) $(SCRIPT_TESTS_$(d)))
+TEST_$(d) := $(addprefix $(OBJPATH)/,$(TESTS_$(d)) \
+	$(if $(call test_platform_supports,script), $(SCRIPT_TESTS_$(d))))
 
+# TODO - .debug target is mixed with testing, but not handled here yet
+
+ifneq ($(call test_platform_supports,binary debug),)
 $(foreach test,$(TESTS_$(d)), $(eval $(call compiled_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS),$($(test)_FAILS))))
+endif
+
+ifneq ($(call test_platform_supports,script),)
 $(foreach test,$(SCRIPT_TESTS_$(d)), $(eval $(call script_test,$(d),$(test), $(call abs_or_dir,$($(test)_TEST_DEPS),$(OBJPATH)),$($(test)_ARGS),$($(test)_FAILS))))
+endif
+
 endif
 
 ########################################################################
