@@ -86,8 +86,7 @@ endif # Daytona
 
 # define class of tests supported by each platform
 TEST_PLATFORM_SUPPORTS_native := binary script debug
-# TODO - not implemented yet
-# TEST_PLATFORM_SUPPORTS_ssh := binary script debug
+TEST_PLATFORM_SUPPORTS_ssh := binary script debug
 TEST_PLATFORM_SUPPORTS_openocd := debug
 test_platform_supports = $(filter $(1),$(TEST_PLATFORM_SUPPORTS_$(PLATFORM_TEST)))
 
