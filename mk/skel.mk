@@ -153,6 +153,7 @@ DEP_OBJS? = $(filter %.o, $?)
 DEP_ARCH = $(filter %.a, $^)
 DEP_ARCH? = $(filter %.a, $?)
 DEP_LIBS = $(addprefix -L,$(dir $(filter %.$(SOEXT), $^))) $(patsubst lib%.$(SOEXT),-l%,$(notdir $(filter %.$(SOEXT), $^)))
+DEP_LD = $(filter %.ld, $^)
 
 # Kept for backward compatibility - you should stop using these since
 # I'm now not dependent on $(OBJDIR)/.fake_file any more
@@ -246,7 +247,7 @@ COMMA = ,
 MAKECMD.$(SOEXT) = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) -shared -o $@ \
 	$(if $(STRIP_CMD), && $(STRIP_CMD))
 
-DEFAULT_MAKECMD = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) $(if $(MAP_FILE),-Wl$(COMMA)-Map=$@.map) -o $@ \
+DEFAULT_MAKECMD = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) $(if $(MAP_FILE),-Wl$(COMMA)-Map=$@.map) $(addprefix -T,$(DEP_LD)) -o $@ \
 	$(if $(STRIP_CMD), && $(STRIP_CMD)) \
 	$(if $(SIZE_CMD), && $(SIZE_CMD)) \
 	$(if $(HEX_CMD), && $(HEX_CMD)) \
