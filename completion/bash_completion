@@ -11,6 +11,17 @@ for original in /usr/share/bash-completion/completions/make /etc/bash_completion
   fi
 done
 
+_nonrec_make_find_arguments()
+{
+  for cur; do
+    case "$cur" in
+      BUILD_MODE=*)
+        echo -n "$cur "
+        ;;
+    esac
+  done
+}
+
 _nonrec_make()
 {
     local cur prev words cword split
@@ -18,6 +29,10 @@ _nonrec_make()
 
     local orig_lc_all="$LC_ALL"
     LC_ALL=C # needed to convince case statement to match err,.. case
+
+    # Pull any interesting parameters from the command-line
+    # to feed to subsidiary makes
+    local args=$(_nonrec_make_find_arguments "${words[@]}")
 
     # Derive $(TOP) and $(MK)
     local top mk
@@ -71,7 +86,7 @@ _nonrec_make()
           local filter=$(pwd)
           # unless current completion is outside this path
           [ "${filter#${cur}}" == "${filter}" ] && filter="${cur}"
-          local completions=$(make -C ${top} completion_list_targets COMPLETION_FILTER="${filter}" | sed -n 's/^COMPLETION_TARGET_LIST=//p')
+          local completions=$(make -C ${top} completion_list_targets ${args} COMPLETION_FILTER="${filter}" | sed -n 's/^COMPLETION_TARGET_LIST=//p')
           COMPREPLY=( $( compgen -W "${completions}" -- "$cur" ) )
           ;;
 

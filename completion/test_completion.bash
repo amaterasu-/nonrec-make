@@ -72,7 +72,9 @@ test_contains "debug" $completion
 test_contains "release" $completion
 
 script=$(pwd)/$(basename ${0})
-objdir=obj/$(basename $(pwd))
+curr_mode=$(basename $(pwd))
+objdir=obj/${curr_mode}
+
 (
   # Run commands from below this directory
   cd ../../..
@@ -82,4 +84,17 @@ objdir=obj/$(basename $(pwd))
   test_contains "${script}.test" $completion
   # and other tests
   test_contains "${wd}/tests/testing/${objdir}/passes" $completion
+
+  # find this test in the completions with /
+  completion=$(complete_at_end_of_line make BUILD_MODE=debug /)
+  alt_dir=$(echo $(dirname ${script}) | sed "s/${curr_mode}/debug/")
+  test_contains "${alt_dir}/test_completion_make.sh.test" $completion
+
+  # try both debug and release so if we are running debug or release
+  # we definitely get the opposite mode
+  completion=$(complete_at_end_of_line make BUILD_MODE=release /)
+  alt_dir=$(echo $(dirname ${script}) | sed "s/${curr_mode}/release/")
+  test_contains "${alt_dir}/test_completion_make.sh.test" $completion
 )
+
+echo "$(basename ${0}) passed"
