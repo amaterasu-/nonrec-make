@@ -42,6 +42,7 @@ _nonrec_make()
     # Pull any interesting parameters from the command-line
     # to feed to subsidiary makes
     local args=$(_nonrec_make_find_arguments "${words[@]}")
+    local build_mode=$(env ${args} sh -c 'echo ${BUILD_MODE}')
 
     # Derive $(TOP) and $(MK)
     local top mk
@@ -80,8 +81,26 @@ _nonrec_make()
           COMPREPLY=( $( compgen -W '${modes[@]}' -- "${cur#*=}" ) )
           ;;
 
+        SSH_TARGET_*=*)
+          # must have something here to avoid completion loop below
+          # lets complete ssh hostnames
+          _known_hosts_real -a "${cur#*=}"
+          ;;
+
+        SSH_TARGET_*)
+          if [ -n "$build_mode" ]; then
+            COMPREPLY=( $( compgen -W "SSH_TARGET_${build_mode}=" -- "${cur#*=}" ) )
+          else
+            local modes=($(_nonrec_all_modes))
+            modes=( "${modes[@]/#/SSH_TARGET_}" ) # prefix SSH_TARGET_
+            modes=( "${modes[@]/%/=}" ) # suffix with =
+            COMPREPLY=( $( compgen -W '${modes[@]}' -- "${cur#*=}" ) )
+          fi
+          compopt -o nospace
+          ;;
+
         [A-Z]*)
-          COMPREPLY=( $( compgen -W "BUILD_MODE= VERBOSE= COLOR_TTY=" -- "$cur" ) )
+          COMPREPLY=( $( compgen -W "BUILD_MODE= VERBOSE= COLOR_TTY= SSH_TARGET_" -- "$cur" ) )
           compopt -o nospace
           ;;
 
