@@ -24,7 +24,7 @@ $(1)/$(OBJDIR)/$(2).run: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONR
 
 .PHONY: $(1)/$(OBJDIR)/$(2).debug
 $(1)/$(OBJDIR)/$(2).debug: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1))
-	gdb -ex "break main" -ex "run" \
+	$(GDB) -ex "break main" -ex "run" \
 		$$(addprefix -x=,$(wildcard $(1)/$(2).debug)) \
 		--args $(1)/$(OBJDIR)/$(2) $(4)
 
