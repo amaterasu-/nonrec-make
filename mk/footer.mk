@@ -52,7 +52,7 @@ ifneq ($(LINKORDER_$(parent_dir)),)
 LINKORDER_$(d) := $(LINKORDER_$(parent_dir))
 endif
 
-SRCS_$(d) := $(notdir $(wildcard $(addprefix $(d)/,*.c *.cpp *.cc)))
+SRCS_$(d) := $(notdir $(wildcard $(addprefix $(d)/,*.c *.cpp *.cc *.S)))
 OBJS_$(d) := $(addprefix $(OBJPATH)/,$(addsuffix .o,$(basename $(SRCS_$(d)))))
 
 daytona_lib := lib$(notdir $(d)).a

@@ -44,6 +44,7 @@ else # Verbose output
 echo_cmd = : [$(BUILD_MODE)] ;
 endif
 
+COMPILE.S = $(call echo_cmd,AS $<) $(CC) $(AFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 COMPILE.c = $(call echo_cmd,CC $<) $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 COMPILE.cc = $(call echo_cmd,CXX $<) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 LINK.c = $(call echo_cmd,LINK $@) $(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)
@@ -83,7 +84,7 @@ endif
 # You can add your own here.  For example to add support for Fortran you
 # would just append ".o:.f" and set COMPILE.f (actually make already
 # defines it - just take a look at output of "make -p")
-AUTO_RULES := .o:.cpp .o:.cc .o:.c
+AUTO_RULES := .o:.cpp .o:.cc .o:.c .o:.S
 # Additional mapping together with corresponding variables can be specified
 # in user_rules.mk
 -include $(MK)/user_rules.mk
