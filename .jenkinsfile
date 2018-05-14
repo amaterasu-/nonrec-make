@@ -24,4 +24,6 @@ node {
   build_and_test_mode("debug");
   build_and_test_mode("release");
   build_and_test_mode("profile");
+  build_mode("rpi_debug");
+  build_mode("rpi_release");
 }
