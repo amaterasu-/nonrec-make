@@ -2,6 +2,10 @@ def build_mode(String mode) {
   stage("build $mode") {
     sh "make -j8 BUILD_MODE=$mode"
   }
+}
+
+def build_and_test_mode(String mode) {
+  build_mode(mode)
   try {
     stage("test $mode") {
       sh "make -j8 BUILD_MODE=$mode test_tree"
@@ -17,7 +21,7 @@ node {
     checkout scm
   }
 
-  build_mode("debug");
-  build_mode("release");
-  build_mode("profile");
+  build_and_test_mode("debug");
+  build_and_test_mode("release");
+  build_and_test_mode("profile");
 }
