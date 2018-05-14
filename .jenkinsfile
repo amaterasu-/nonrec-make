@@ -4,11 +4,13 @@ def build_mode(String mode) {
   }
 }
 
-def build_and_test_mode(String mode) {
+def build_and_test_mode(String mode, String test_additional = "") {
   build_mode(mode)
   try {
     stage("test $mode") {
-      sh "make -j8 BUILD_MODE=$mode test_tree"
+      sshagent(['pi_jenkins_pi4']) {
+        sh "make -j8 BUILD_MODE=$mode test_tree$test_additional"
+      }
     }
   } catch (e) {
     currentBuild.result = 'UNSTABLE'
@@ -24,8 +26,8 @@ node {
   build_and_test_mode("debug");
   build_and_test_mode("release");
   build_and_test_mode("profile");
-  build_mode("rpi_debug");
-  build_mode("rpi_release");
+  build_and_test_mode("rpi_debug", " SSH_TARGET_rpi_debug=pi@pi4");
+  build_and_test_mode("rpi_release", " SSH_TARGET_rpi_release=pi@pi4");
   build_and_test_mode("stm32f0_debug");
   build_and_test_mode("stm32f0_release");
 }
