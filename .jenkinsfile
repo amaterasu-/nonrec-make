@@ -2,6 +2,14 @@ def build_mode(String mode) {
   stage("build $mode") {
     sh "make -j8 BUILD_MODE=$mode"
   }
+  try {
+    stage("test $mode") {
+      sh "make -j8 BUILD_MODE=$mode test_tree"
+    }
+  } catch (e) {
+    currentBuild.result = 'UNSTABLE'
+    result = "FAIL" // make sure other exceptions are recorded as failure too
+  }
 }
 
 node {
