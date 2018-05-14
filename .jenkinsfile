@@ -1,0 +1,15 @@
+def build_mode(String mode) {
+  stage("build $mode") {
+    sh "make -j8 BUILD_MODE=$mode"
+  }
+}
+
+node {
+  stage("preparation") {
+    checkout scm
+  }
+
+  build_mode("debug");
+  build_mode("release");
+  build_mode("profile");
+}
