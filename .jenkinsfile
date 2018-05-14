@@ -26,4 +26,6 @@ node {
   build_and_test_mode("profile");
   build_mode("rpi_debug");
   build_mode("rpi_release");
+  build_and_test_mode("stm32f0_debug");
+  build_and_test_mode("stm32f0_release");
 }
