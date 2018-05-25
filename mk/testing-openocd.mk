@@ -23,10 +23,20 @@ $(1)/$(OBJDIR)/$(2).run: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1)) $$(NONR
 
 .PHONY: $(1)/$(OBJDIR)/$(2).debug
 $(1)/$(OBJDIR)/$(2).debug: $(1)/$(OBJDIR)/$(2) $(3) $$(MAKEFILE_DEPS_$(1))
-	$(GDB) -ex "target extended-remote | openocd -c \"gdb_port pipe; log_output $(1)/$(OBJDIR)/$(2).openocd.log\" -f $(OPENOCD_BOARD) " \
+	$(GDB) -ex \
+		$(if $(filter true,$(ARM_SEMIHOSTING)), \
+			"target extended-remote localhost:3333", \
+			"target extended-remote | openocd -c \"gdb_port pipe; log_output $(1)/$(OBJDIR)/$(2).openocd.log\" -f $(OPENOCD_BOARD) ") \
+		$(if $(filter true,$(ARM_SEMIHOSTING)),-ex "monitor arm semihosting enable" -ex "monitor reset halt") \
 		-ex "load" \
 		-ex "monitor reset init" \
 		$$(addprefix -x=,$(wildcard $(1)/$(2).debug)) \
 		--args $(1)/$(OBJDIR)/$(2) $(4)
 
 endef
+
+ifneq ($(filter true,$(ARM_SEMIHOSTING)),)
+.PHONY: openocd
+openocd:
+	openocd -f $(OPENOCD_BOARD)
+endif

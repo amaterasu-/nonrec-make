@@ -14,9 +14,7 @@ PLATFORM := stm32f0
 # - match using OPT_IN_PLATFORMS on OS/CPU/PLATFORM
 PLATFORM_OPT_IN := true
 
-ifneq ($(ARM_SEMIHOSTING),true)
 # Can't yet handle openocd debug with ARM_SEMIHOSTING
 PLATFORM_TEST := openocd
 # TODO = move this definition to a board-specific location
 OPENOCD_BOARD = board/stm32f0discovery.cfg
-endif
