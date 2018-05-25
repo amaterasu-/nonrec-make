@@ -35,6 +35,11 @@ endif
 
 endif
 
+ifeq ($(ENABLE_PROFILE),true)
+CPPFLAGS += -pg
+LDFLAGS  += -pg
+endif
+
 # Perform stripping of unused code/data.  You can disable this (but you won't want to)
 ifneq ($(NO_GC_SECTIONS),true)
 CPPFLAGS += -fdata-sections -ffunction-sections
