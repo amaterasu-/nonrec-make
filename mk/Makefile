@@ -12,6 +12,9 @@ endif
 
 MK := $(TOP)/mk
 
+.SUFFIXES:
+MAKEFLAGS += --no-builtin-rules
+
 .PHONY: dir tree all clean clean_all clean_tree dist_clean
 
 # Default target when nothing is given on the command line.  Reasonable
