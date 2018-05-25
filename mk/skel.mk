@@ -153,7 +153,7 @@ DEP_OBJS? = $(filter %.o, $?)
 DEP_ARCH = $(filter %.a, $^)
 DEP_ARCH? = $(filter %.a, $?)
 DEP_LIBS = $(addprefix -L,$(dir $(filter %.$(SOEXT), $^))) $(patsubst lib%.$(SOEXT),-l%,$(notdir $(filter %.$(SOEXT), $^)))
-DEP_LD = $(filter %.ld, $^)
+DEP_LD = $(if $(filter %.ld, $^),$(filter %.ld, $^),$(PLATFORM_LD))
 
 # Kept for backward compatibility - you should stop using these since
 # I'm now not dependent on $(OBJDIR)/.fake_file any more
