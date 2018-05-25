@@ -63,7 +63,7 @@ CXXFLAGS += -fvisibility-inlines-hidden
 
 # To help you work out importing vs exporting here's a variable based on the
 # directory being built:
-CPPFLAGS += -DBUILD$(subst -,_,$(subst /,_,$(subst $(TOP),,$(@RD))))
+CPPFLAGS += -DBUILD$(subst .,_,$(subst /,_,$(subst -,_,$(subst /,_,$(subst $(TOP),,$(@RD))))))
 
 # so you can use the following - eg in this/component/header.h
 #
