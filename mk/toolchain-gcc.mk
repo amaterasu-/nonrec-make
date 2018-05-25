@@ -104,7 +104,9 @@ CXXFLAGS += -fno-exceptions -fno-use-cxa-atexit
 
 ifeq ($(ARM_SEMIHOSTING),true)
 CPPFLAGS += -DARM_SEMIHOSTING
-LDFLAGS +=  --specs=rdimon.specs
+LDFLAGS += --specs=rdimon.specs
+else
+LDFLAGS += --specs=nosys.specs
 endif
 
 LDFLAGS += --specs=nano.specs
