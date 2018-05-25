@@ -40,7 +40,7 @@ test_tree : test_tree_$(RUNDIR)
 ifneq ($(SYNTAX_CHECK_MODE),)
 .phony: check-syntax
 
-check-syntax: $(addsuffix .check-syntax,$(addprefix $(TOP)/,$(CHK_SOURCES)))
+check-syntax: $(addsuffix .check-syntax,$(shell readlink -f $(addprefix $(TOP)/,$(CHK_SOURCES))))
 endif
 
 # empty list of completion targets to be filled for completion_list_targets
