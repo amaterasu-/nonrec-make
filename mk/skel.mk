@@ -10,6 +10,10 @@
 # Helps avoid makefile parse issues
 COMMA = ,
 
+# filter and filter-out don't allow searching for a substring
+filter_with = $(foreach v,$(2),$(if $(findstring $(1),$(value v)),$(value v)))
+filter_out_with = $(foreach v,$(2),$(if $(findstring $(1),$(value v)),,$(value v)))
+
 ########################################################################
 #                        User defined variables                        #
 ########################################################################
