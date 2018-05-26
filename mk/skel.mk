@@ -7,6 +7,9 @@
 # $? - the names of all dependencies that are newer then the target
 # $^ - the names of all dependencies
 
+# Helps avoid makefile parse issues
+COMMA = ,
+
 ########################################################################
 #                        User defined variables                        #
 ########################################################################
@@ -241,8 +244,6 @@ MAKECMD.a = $(call echo_cmd,AR $@) \
 		&& rm -f $@.empty.o \
 		&&) \
 	$(RANLIB) $@
-
-COMMA = ,
 
 MAKECMD.$(SOEXT) = $(LINK.cc) $(DEP_OBJS) $(DEP_ARCH) $(DEP_LIBS) $(LIBS_$(@)) $(LDLIBS) -shared -o $@ \
 	$(if $(STRIP_CMD), && $(STRIP_CMD))
