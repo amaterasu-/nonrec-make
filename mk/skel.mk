@@ -307,7 +307,9 @@ endef
 
 define tgt_rule
 abs_deps := $$(foreach dep,$$(DEPS_$(1)),$$(if $$(or $$(filter /%,$$(dep)),$$(filter $$$$%,$$(dep))),$$(dep),$$(addprefix $(OBJPATH)/,$$(dep)))) $$(MAKEFILE_DEPS_$$(d)) $$(NONREC_MAKEFILES)
--include $$(addsuffix .d,$$(basename $$(abs_deps)))
+
+# Include any .d files from dependencies that are in build-directories
+-include $$(addsuffix .d,$$(call filter_with,$(OBJDIR),$$(abs_deps)))
 $(1): $$(abs_deps) $(if $(findstring $(OBJDIR),$(1)),| $(OBJPATH),)
 	$$(or $$(CMD_$(1)),$$(MAKECMD$$(suffix $$@)),$$(DEFAULT_MAKECMD))
 endef
