@@ -306,7 +306,17 @@ $(2)_CMD =
 endef
 
 define tgt_rule
-abs_deps := $$(foreach dep,$$(DEPS_$(1)),$$(if $$(or $$(filter /%,$$(dep)),$$(filter $$$$%,$$(dep))),$$(dep),$$(addprefix $(OBJPATH)/,$$(dep)))) $$(MAKEFILE_DEPS_$$(d)) $$(NONREC_MAKEFILES)
+# deps are
+# - DEPS_$(1)
+# - if there is no CMD_ or MAKECMD (ie default link) either a defined LD_SCRIPT for the target
+#     or the PLATFORM_LD
+# - MAKEFILE_DEPS
+# - global NONREC_MAKEFILES
+abs_deps := $$(foreach dep,$$(DEPS_$(1)) \
+			$$(if $$(or $$(CMD_$(1)), $$(MAKECMD$$(suffix $(1)))),,$$(or $$(LD_SCRIPT_$(1)),$(PLATFORM_LD))) \
+		,$$(if $$(or $$(filter /%,$$(dep)),$$(filter $$$$%,$$(dep))),$$(dep),$$(addprefix $(OBJPATH)/,$$(dep)))) \
+	$$(MAKEFILE_DEPS_$$(d)) \
+	$$(NONREC_MAKEFILES)
 
 # Include any .d files from dependencies that are in build-directories
 -include $$(addsuffix .d,$$(call filter_with,$(OBJDIR),$$(abs_deps)))
@@ -352,6 +362,7 @@ DEPS_$(1)$(2) = $(2).o  $(3)       $(foreach l,$(filter $(filter-out /%,$(4)),$(
 LIBS_$(1)$(2) = $(addprefix -l,$(5))
 # Allow to be specified
 LDFLAGS_$(1)$(2) = $(value $(2)_LDFLAGS)
+LD_SCRIPT_$(1)$(2) = $(value $(2)_LD_SCRIPT)
 
 endef
 
