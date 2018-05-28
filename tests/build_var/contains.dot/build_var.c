@@ -1,0 +1,3 @@
+#ifndef BUILD_tests_build_var_contains_dot
+#error expected BUILD_tests_build_var_contains_dot
+#endif
