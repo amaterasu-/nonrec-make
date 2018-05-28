@@ -34,6 +34,7 @@ RUN.sh := sh
 RUN.py := python
 RUN.rb := ruby
 RUN.bash := bash
+RUN.bats := $(or $(BATS),bats)
 
 # TODO - emit different failure
 
