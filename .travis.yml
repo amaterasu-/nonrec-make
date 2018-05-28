@@ -51,3 +51,6 @@ script:
  - make -j2 tree
  - make -j2 tree BUILD_MODE=release
  - make -j2 tree BUILD_MODE=profile
+ - make -j2 test_tree
+ - make -j2 test_tree BUILD_MODE=release
+ - make -j2 test_tree BUILD_MODE=profile
