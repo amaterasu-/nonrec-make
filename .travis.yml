@@ -47,4 +47,7 @@ before_install:
 # While we get this running disable any install
 install: true
 
-script: make -j2 tree
+script:
+ - make -j2 tree
+ - make -j2 tree BUILD_MODE=release
+ - make -j2 tree BUILD_MODE=profile
