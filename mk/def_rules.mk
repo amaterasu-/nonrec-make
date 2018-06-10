@@ -84,7 +84,7 @@ endif
 # You can add your own here.  For example to add support for Fortran you
 # would just append ".o:.f" and set COMPILE.f (actually make already
 # defines it - just take a look at output of "make -p")
-AUTO_RULES := .o:.cpp .o:.cc .o:.c .o:.S
+AUTO_RULES := .o:.cpp .o:.cc .o:.c .o:.S .ld:.lds
 # Additional mapping together with corresponding variables can be specified
 # in user_rules.mk
 -include $(MK)/user_rules.mk
@@ -92,6 +92,8 @@ AUTO_RULES := .o:.cpp .o:.cc .o:.c .o:.S
 # This compile command should be generic for most compilers - you should
 # just define appropriate COMPILE.suffix variable.
 COMPILECMD = $(COMPILE$(suffix $<)) -o $@ $<
+
+COMPILE.lds = $(call echo_cmd,CPP $<) $(CPP) $(CPPFLAGS) -nostdinc -MMD -MF $(@).d -P
 
 # In cases where from one source different types of objects can be
 # generated I have added COMPILECMD_TD (TD stands for "target
