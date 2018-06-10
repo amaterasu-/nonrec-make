@@ -45,6 +45,75 @@ cli$(EXE)_DEPS = cli.o cli_dep.o
 cli$(EXE)_CMD = $(LINK.c) $(DEP_OBJS) $(LDLIBS) -o $@
 ```
 
+# Testing
+
+There are first-class test targets `test` and `test_tree` that behave
+like the existing `tree` and `all` rules.
+
+Compiled tests are defined by the `TESTS` variable and depend on the
+binary file of the same name that is built in.  For example two tests
+are defined below, built from source.
+
+```Makefile
+TARGETS := passes fails
+
+passes_DEPS := passes.o
+fails_DEPS := fails.o
+
+TESTS := passes fails
+fails_FAILS := true
+```
+
+Some tests mat be broken for small periods of time, so you may mark
+them as `_FAILS` as above.  In this case success and failure are
+inverted - it is an error for a `_FAILS` test to pass (you were
+supposed to fix it, right, and mark it as working again).
+
+## Environment
+
+TESTS assumes the tests themselves are executables, you run them by
+executing them where they were built.  Thus they are run from
+`$(OBJPATH)` as their working directory.  They expect to run by
+invoking directly from the command-line.
+
+You may pass arguments to a test using the `_ARGS` declaration as
+below.  Additionally you may add dependencies that are built before
+running the tests.  Additionally these dependencies are actual
+make-dependencies of the test results.  ie you should add your input
+test-data as `_TEST_DEPS` so that the tests need to be re-run if the
+input files change.  Additionally if those test-inputs need generation
+or outputs of another test that should work too if `make ` knows how
+to build them.
+
+```
+# For now adding unneeded dep on fails to test TEST_DEPS
+passes_TEST_DEPS := fails
+passes_ARGS := arg1 arg2 arg3
+```
+
+## Script tests
+
+Script tests allow more complicated testing of built targets.  For
+example you can test multitple different arguments or multiple
+different calls of your built executables.
+
+Script tests require an interpreter - eg a shell or script
+interpreter.  `SCRIPT_TESTS` are invoked based on their extension -
+for example `test.sh` will be invoked `$(RUN.sh) path/to/test.sh`
+
+You can add new script test support by defining other `$(RUN)`
+variables - eg `RUN.py := python`.
+
+For consistency they are also run out of `$(OBJDIR)`, even though the
+script resides in `$(d)`.
+
+```
+SCRIPT_TESTS := test.sh
+
+test.sh_ARGS := script_arg1 script_arg2
+```
+
+
 # Approach
 
 ## Makefile dependencies
