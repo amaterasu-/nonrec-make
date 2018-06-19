@@ -195,6 +195,33 @@ targets for which a `PLATFORM_VAR` is matched.  eg:
 OPT_IN_PLATFORMS := stm32f0 x86
 ```
 
+### Linker scripts
+
+The platform can define a single default linker script by defining
+`LD_SCRIPT` to a global path.  Additionally an individual target
+definition can override its linker-script by defining
+`<name>_LD_SCRIPT`.
+
+The LD_SCRIPT is implemented as a dependency so you can generate it.
+There is a specific rule for using the C preprocessor to convert
+`.lds` files to `.ld` files. You can (and should consider):
+
+At the top level:
+
+```
+# define a linker script for this board
+LD_SCRIPT := $(TOP)/platform/$(BOARD)/$(OBJDIR)/lscript.ld
+```
+
+in $(TOP)/platform/$(BOARD)/Rules.mk
+
+```
+# Builds lscript.d from lscript.lds
+TARGETS := lscript.ld
+
+# Pass flags to the pre-processor to define variables
+CPPFLAGS_$(d) := -DRAM_SIZE=0x10000 -DFLASH_SIZE=0x400000
+```
 
 ## Testing
 
