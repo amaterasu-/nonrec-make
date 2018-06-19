@@ -94,7 +94,7 @@ passes_ARGS := arg1 arg2 arg3
 ## Script tests
 
 Script tests allow more complicated testing of built targets.  For
-example you can test multitple different arguments or multiple
+example you can test multiple different arguments or multiple
 different calls of your built executables.
 
 Script tests require an interpreter - eg a shell or script
