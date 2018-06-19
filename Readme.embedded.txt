@@ -170,7 +170,31 @@ Each of these variables will be defined for the C pre-processor - eg
 
 ### Bare-metal support
 
-Multi-target projects often want to mix common code shared by multiple platforms, especially to allow cross-compilation and testing on host.  For similar targets
+Multi-target projects often want to mix common code shared by multiple
+platforms, especially to allow cross-compilation and testing on host.
+For similar targets eg Unix-like, or posix compatible then code should
+be shared between all targets and use the platform variables above to
+improve cross-compilation support.  Thus by default all targets
+compile all code.
+
+For bare-metal targets usually only the definitions and simple
+algorithms are suitable for cross-compilation.  In this case you can
+nominate individual directories to be part of the tree.
+
+Define such targets with
+
+```
+PLATFORM_OPT_IN := true
+```
+
+in their top-level configuration.  Such platforms will only derive
+targets for which a `PLATFORM_VAR` is matched.  eg:
+
+```
+# Compile this for opt-in targets on stm32f0 and x87 CPU
+OPT_IN_PLATFORMS := stm32f0 x86
+```
+
 
 ## Testing
 
